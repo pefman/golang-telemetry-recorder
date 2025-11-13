@@ -296,11 +296,15 @@ collectLoop:
 	<-userQuit
 	close(stopChan)
 	
-	// Give time for goroutines to finish
-	time.Sleep(100 * time.Millisecond)
+	// Stop display first to clean up tview
+	display.Stop()
+	
+	// Give time for goroutines to finish and terminal to reset
+	time.Sleep(200 * time.Millisecond)
 	
 	// Show completion message in terminal after tview stops
 	clearScreen()
+	showCursor()
 	stats := rec.Stats()
 	duration := time.Since(stats.StartTime)
 	graphics.ShowCompletionMessage("recording", stats.PacketsRecorded, 
@@ -494,11 +498,15 @@ func playbackSession() error {
 
 	close(stopChan)
 	
-	// Give time for goroutines to finish
-	time.Sleep(100 * time.Millisecond)
+	// Stop display first to clean up tview
+	display.Stop()
+	
+	// Give time for goroutines to finish and terminal to reset
+	time.Sleep(200 * time.Millisecond)
 	
 	// Show completion message in terminal after tview stops
 	clearScreen()
+	showCursor()
 	stats := player.Stats()
 	duration := time.Since(stats.StartTime)
 	graphics.ShowCompletionMessage("playback", stats.PacketsPlayed, 

@@ -154,16 +154,18 @@ func (td *TViewDisplay) UpdatePlayback(
 	content.WriteString(fmt.Sprintf("[cyan]  ⚡ Speed: %.1fx[white]\n", speed))
 	content.WriteString("[yellow:b:]═══════════════════════════════════════════════════════[white]\n\n")
 
-	if isPaused {
-		content.WriteString("[red:b:]⏸️  PAUSED[white]\n\n")
-	} else {
-		// Telemetry
-		if telemetry != nil {
+	// Telemetry (always show)
+	if telemetry != nil {
+		if isPaused {
+			content.WriteString("[red:b:]⏸  PAUSED - LAST TELEMETRY DATA[white]\n\n")
+		} else {
 			content.WriteString("[cyan:b:][ LIVE TELEMETRY DATA 🏎️ ][white]\n\n")
-			content.WriteString(td.formatTelemetry(telemetry))
 		}
+		content.WriteString(td.formatTelemetry(telemetry))
+	}
 
-		// Stats
+	// Stats (only show when not paused)
+	if !isPaused {
 		content.WriteString("\n")
 		content.WriteString(td.formatStats(packetsPlayed, bytesSent, 0, elapsed, "playback"))
 	}
@@ -202,7 +204,7 @@ func (td *TViewDisplay) formatTelemetry(t *TelemetryDisplay) string {
 		tempColor = "yellow"
 	}
 	tempBar := td.createColorBar(int(t.EngineTemp)-50, 70, 20, tempColor)
-	content.WriteString(fmt.Sprintf("🌡️  Engine Temp  │ %s  [%s:b:]%d°C[white]\n", tempBar, tempColor, t.EngineTemp))
+	content.WriteString(fmt.Sprintf("🌡  Engine Temp  │ %s  [%s:b:]%d°C[white]\n", tempBar, tempColor, t.EngineTemp))
 	
 	// Tyre Temp
 	tyreBar := td.createColorBar(int(t.TyreTempAvg)-20, 100, 20, "magenta")
@@ -229,7 +231,7 @@ func (td *TViewDisplay) formatTelemetry(t *TelemetryDisplay) string {
 	} else {
 		gearDisplay = fmt.Sprintf("Gear %d", int(t.Gear))
 	}
-	content.WriteString(fmt.Sprintf("⚙️  Gearbox      │ [cyan:b:]%s[white]\n", gearDisplay))
+	content.WriteString(fmt.Sprintf("🏁 Gearbox      │ [cyan:b:]%s[white]\n", gearDisplay))
 	
 	// DRS
 	drsStatus := "[red]CLOSED[white]"

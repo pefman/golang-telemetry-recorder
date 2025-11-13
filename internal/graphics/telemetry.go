@@ -12,11 +12,11 @@ type TelemetryDisplay struct {
 	Brake            float32
 	Gear             int8
 	EngineRPM        uint16
+	DRS              bool
 	EngineTemp       uint16
 	TyreTempAvg      uint8
 	FuelLevel        float32
 	ERSEnergy        float32
-	DRS              bool
 }
 
 // ShowLiveTelemetry displays real-time telemetry data with bars
@@ -80,7 +80,7 @@ func ShowLiveTelemetry(td *TelemetryDisplay) {
 	} else if td.Gear == 0 {
 		gearDisplay = "Neutral"
 	}
-	fmt.Printf("⚙️  Gearbox      │ %s\n", Bold+Cyan+gearDisplay+Reset)
+	fmt.Printf("🏁 Gearbox      │ %s\n", Bold+Cyan+gearDisplay+Reset)
 	
 	// DRS
 	drsStatus := Red + "CLOSED" + Reset

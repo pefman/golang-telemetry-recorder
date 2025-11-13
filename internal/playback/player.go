@@ -101,15 +101,18 @@ func (p *Player) Start() error {
 // Stop stops playback
 func (p *Player) Stop() error {
 	p.mu.Lock()
-	defer p.mu.Unlock()
-
+	
 	if !p.running {
+		p.mu.Unlock()
 		return nil
 	}
 
+	// Signal stop and mark as not running
 	close(p.stopChan)
 	p.running = false
+	p.mu.Unlock()
 
+	// Close connections (this will also wake up any blocking reads)
 	if p.conn != nil {
 		p.conn.Close()
 	}
@@ -118,6 +121,10 @@ func (p *Player) Stop() error {
 		p.file.Close()
 	}
 	
+	// Wait a bit for the playback loop to exit
+	time.Sleep(50 * time.Millisecond)
+	
+	// Now safe to close the packets channel
 	close(p.packets)
 
 	return nil
@@ -214,17 +221,19 @@ func (p *Player) playbackLoop() {
 				// Log error but continue
 			}
 			
-			// Parse and send packet to channel for telemetry display
-			if header, err := telemetry.ParseHeader(packetData); err == nil {
-				packet := &telemetry.RecordedPacket{
-					Timestamp: time.Unix(0, timestamp),
-					Data:      packetData,
-					Header:    *header,
-				}
-				select {
-				case p.packets <- packet:
-				default:
-					// Channel full, skip (avoid blocking playback)
+			// Parse and send packet to channel for telemetry display (only if still running)
+			if p.IsRunning() {
+				if header, err := telemetry.ParseHeader(packetData); err == nil {
+					packet := &telemetry.RecordedPacket{
+						Timestamp: time.Unix(0, timestamp),
+						Data:      packetData,
+						Header:    *header,
+					}
+					select {
+					case p.packets <- packet:
+					default:
+						// Channel full, skip (avoid blocking playback)
+					}
 				}
 			}
 

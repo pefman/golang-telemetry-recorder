@@ -1,0 +1,5 @@
+46300d8e7f95d305af364c2e63442be411bda8024eb939c0d0d8686c59c7be2b  golang-telemetry-recorder_1.0.0_darwin_amd64.tar.gz
+0bf11712a7a8e194209c1875b8b0600d9908fdf0c3445ea9360978fd6f549c83  golang-telemetry-recorder_1.0.0_darwin_arm64.tar.gz
+586c1fb3ab30ae602f83e83ba473dab4611ee5df0160a27d8f54efbe4b6fedfe  golang-telemetry-recorder_1.0.0_linux_amd64.tar.gz
+fc7057163e5b2b13934e83364171c602debda4e2d371f935edd49f8894f34be1  golang-telemetry-recorder_1.0.0_linux_arm64.tar.gz
+5331be5da12d6473eee20454563a6180d6847cdaf4fa18aa1f0e61fe79b4ebe3  golang-telemetry-recorder_1.0.0_windows_amd64.tar.gz
