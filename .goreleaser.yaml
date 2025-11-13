@@ -1,0 +1,107 @@
+# GoReleaser configuration for F1 Telemetry Recorder
+version: 2
+
+before:
+  hooks:
+    # Clean any previous builds
+    - go mod tidy
+
+builds:
+  - id: f1-telemetry-recorder
+    main: ./main.go
+    binary: f1-telemetry-recorder
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    # Windows-specific settings
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+    # Ignore ARM64 on Windows (not commonly used)
+    ignore:
+      - goos: windows
+        goarch: arm64
+
+archives:
+  - id: default
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- .Os }}_
+      {{- .Arch }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    files:
+      - README.md
+      - LICENSE
+      - config.example.json
+      - QUICKSTART.md
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^chore:'
+      - 'README'
+  groups:
+    - title: Features
+      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
+      order: 0
+    - title: 'Bug Fixes'
+      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
+      order: 1
+    - title: 'Performance Improvements'
+      regexp: '^.*?perf(\([[:word:]]+\))??!?:.+$'
+      order: 2
+    - title: Others
+      order: 999
+
+release:
+  github:
+    owner: pefman
+    name: golang-telemetry-recorder
+  draft: false
+  prerelease: auto
+  name_template: "F1 Telemetry Recorder v{{.Version}}"
+  header: |
+    ## F1 Telemetry Recorder {{.Version}}
+    
+    A powerful Golang-based telemetry recorder and playback tool for F1 25 with flicker-free 60 FPS display!
+    
+    ### Installation
+    
+    Download the appropriate archive for your operating system from the assets below and extract it.
+    
+    ### What's New
+  footer: |
+    
+    ---
+    
+    **Full Changelog**: https://github.com/pefman/golang-telemetry-recorder/compare/{{.PreviousTag}}...{{.Tag}}
+    
+    ### Platform-specific Notes
+    
+    #### Windows
+    - Run `f1-telemetry-recorder.exe` directly
+    - Best experienced in Windows Terminal or PowerShell
+    
+    #### Linux
+    - Make executable: `chmod +x f1-telemetry-recorder`
+    - Run: `./f1-telemetry-recorder`
+    
+    #### macOS
+    - Make executable: `chmod +x f1-telemetry-recorder`
+    - Run: `./f1-telemetry-recorder`
+    - You may need to allow the app in System Preferences → Security & Privacy
