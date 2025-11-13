@@ -27,6 +27,7 @@ recordings/
 
 # Configuration files (may contain sensitive settings)
 config.json
+.github_token
 
 # IDE specific files
 .vscode/
