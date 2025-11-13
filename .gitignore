@@ -1,0 +1,40 @@
+# F1 Telemetry Recorder - .gitignore
+
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+f1-telemetry-recorder
+f1-telemetry-recorder.exe
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Go workspace file
+go.work
+
+# Dependency directories
+vendor/
+
+# Recordings directory
+recordings/
+*.f1tr
+
+# Configuration files (may contain sensitive settings)
+config.json
+
+# IDE specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS specific files
+.DS_Store
+Thumbs.db

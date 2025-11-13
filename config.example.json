@@ -1,0 +1,10 @@
+{
+  "udp_port": 20777,
+  "bind_address": "0.0.0.0",
+  "recording_dir": "./recordings",
+  "auto_create_dir": true,
+  "timestamp_format": "2006-01-02_15-04-05",
+  "buffer_size": 65536,
+  "packet_timeout": 5000,
+  "playback_speed": 1.0
+}
