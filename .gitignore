@@ -18,6 +18,9 @@ f1-telemetry-recorder.exe
 # Go workspace file
 go.work
 
+# GoReleaser output
+dist/
+
 # Dependency directories
 vendor/
 
